@@ -458,7 +458,6 @@ AGRI-LAND-PLANNER-AI/
 ├── .env
 ├── .gitignore
 ├── app.py
-├── streamlit_app.py
 ├── requirements.txt
 └── README.md
 ```
@@ -757,9 +756,8 @@ https://YOUR_STREAMLIT_APP_URL.streamlit.app
 
 Source code:
 
-https://github.com/dilumgit/AGRI-LAND-PLANNER-AI
+https://github.com/dilumgit/Agriculture-Land-Planning-Agent.git
 
-> Replace the above URL with your actual GitHub repository link.
 
 ---
 
