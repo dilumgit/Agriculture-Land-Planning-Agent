@@ -1,5 +1,5 @@
 from graph.state import AgricultureState
-from tools.llm import groq_llm
+from tools.llm import groq_fast
 from rag.rag_service import retriever
 
 
@@ -42,38 +42,72 @@ Water Source: {state["water_source"]}
 Soil Type: {state["soil_type"]}
 Objective: {state["objective"]}
 
-Generate a professional report with the following sections.
+Generate a professional report in Markdown format.
 
-1. Land Summary
+The report must contain the following sections:
 
-2. Climate Analysis
+# Land Analysis Report
+
+## 1. Land Summary
+
+## 2. Climate Analysis
 - Temperature
 - Rainfall
-- Seasonal suitability
+- Seasonal Suitability
 
-3. Soil Analysis
+## 3. Soil Analysis
 - Suitability
 - Advantages
 - Limitations
 
-4. Water Availability
-- Water source evaluation
-- Irrigation recommendations
+## 4. Water Availability
+- Water Source Evaluation
+- Irrigation Recommendations
 
-5. Opportunities
+## 5. Opportunities
 
-6. Risks
+## 6. Risks
 
-7. Overall Suitability Score (0-100)
+## 7. Overall Suitability Score (0-100)
 
 Base your analysis primarily on the provided reference information whenever it is relevant.
+
 If the reference information does not contain sufficient details for a specific point, clearly state that and use general agricultural knowledge cautiously.
 
-Return a professional report.
+===================================================
+EXECUTIVE SUMMARY
+===================================================
+
+At the end of the report, create a section titled exactly:
+
+## Executive Summary
+
+Requirements:
+- Maximum 6 bullet points.
+- Include:
+  • Overall land suitability
+  • Climate suitability
+  • Soil suitability
+  • Water availability
+  • Main opportunity
+  • Main risk
+- Keep the summary under 120 words.
+- This summary will be used by another AI agent.
 """
 
-    response = groq_llm.invoke(prompt)
+    response = groq_fast.invoke(prompt)
 
-    state["land_analysis"] = response.content
+    full_report = response.content
+
+    # Store full report
+    state["land_analysis"] = full_report
+
+    # Extract executive summary
+    if "## Executive Summary" in full_report:
+        summary = full_report.split("## Executive Summary", 1)[1].strip()
+    else:
+        summary = full_report
+
+    state["land_summary"] = summary
 
     return state

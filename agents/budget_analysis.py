@@ -1,11 +1,11 @@
 from graph.state import AgricultureState
-from tools.llm import groq_llm
+from tools.llm import groq_fast
 from rag.rag_service import retriever
 
 
 def budget_analysis_agent(state: AgricultureState):
 
-    crop_recommendations = state["crop_recommendations"]
+    crop_summary = state["crop_summary"]
 
     # Create search query
     search_query = f"""
@@ -14,8 +14,8 @@ def budget_analysis_agent(state: AgricultureState):
     Land Size: {state["land_size"]} {state["land_unit"]}
     Objective: {state["objective"]}
 
-    Crop Recommendations:
-    {crop_recommendations}
+    Crop Summary:
+    {crop_summary}
     """
 
     # Retrieve relevant documents
@@ -46,42 +46,74 @@ Budget: Rs. {state["budget"]}
 Objective: {state["objective"]}
 
 =========================
-RECOMMENDED CROPS
+CROP RECOMMENDATION SUMMARY
 =========================
 
-{crop_recommendations}
+{crop_summary}
 
-Prepare a professional financial analysis.
+Generate a professional report in Markdown format.
 
-Include:
+The report must contain:
 
-1. Budget Sufficiency
-   - Is the available budget sufficient?
-   - Explain why.
+# Budget Analysis Report
 
-2. Estimated Cultivation Costs
-   - Estimated cost for each recommended crop.
-   - Use reference information where available.
+## 1. Budget Sufficiency
+- Is the available budget sufficient?
+- Explain why.
 
-3. Expected Return on Investment (ROI)
+## 2. Estimated Cultivation Costs
+- Estimated cost for each recommended crop.
+- Use reference information where available.
 
-4. Most Profitable Crop
-   - Explain why.
+## 3. Expected Return on Investment (ROI)
 
-5. Cost Saving Recommendations
+## 4. Most Profitable Crop
+- Explain why.
 
-6. Financial Risks
+## 5. Cost Saving Recommendations
 
-7. Final Financial Recommendation
+## 6. Financial Risks
+
+## 7. Final Financial Recommendation
 
 Base your calculations and recommendations primarily on the provided reference information.
+
 If exact cost figures are not available in the retrieved documents, clearly state that instead of making up values.
 
-Return the answer as a professional report.
+===================================================
+EXECUTIVE SUMMARY
+===================================================
+
+At the end of the report, create a section titled exactly:
+
+## Executive Summary
+
+Requirements:
+- Maximum 6 bullet points.
+- Include:
+  • Budget sufficiency
+  • Best ROI crop
+  • Estimated financial outlook
+  • Main financial risk
+  • Cost-saving recommendation
+  • Overall financial recommendation
+- Keep the summary under 120 words.
+- This summary will be used by another AI agent.
 """
 
-    response = groq_llm.invoke(prompt)
+    response = groq_fast.invoke(prompt)
 
-    state["budget_analysis"] = response.content
+    full_report = response.content
+
+    # Store full report
+    state["budget_analysis"] = full_report
+
+    # Extract executive summary
+    if "## Executive Summary" in full_report:
+        summary = full_report.split("## Executive Summary", 1)[1].strip()
+    else:
+        summary = full_report
+
+    state["budget_summary"] = summary
 
     return state

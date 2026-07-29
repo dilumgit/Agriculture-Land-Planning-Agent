@@ -1,14 +1,15 @@
 from graph.state import AgricultureState
-from tools.llm import groq_llm
+from tools.llm import groq_smart
 from rag.rag_service import retriever
 
 
 def review_agent(state: AgricultureState):
 
-    land_analysis = state["land_analysis"]
-    crop_recommendations = state["crop_recommendations"]
-    budget_analysis = state["budget_analysis"]
-    cultivation_plan = state["cultivation_plan"]
+    # Use summaries instead of full reports
+    land_summary = state["land_summary"]
+    crop_summary = state["crop_summary"]
+    budget_summary = state["budget_summary"]
+    cultivation_summary = state["cultivation_summary"]
 
     # Create search query
     search_query = f"""
@@ -19,8 +20,8 @@ def review_agent(state: AgricultureState):
     Budget: Rs. {state["budget"]}
     Objective: {state["objective"]}
 
-    Cultivation Plan:
-    {cultivation_plan}
+    Cultivation Summary:
+    {cultivation_summary}
     """
 
     # Retrieve relevant documents
@@ -42,32 +43,36 @@ REFERENCE INFORMATION
 {rag_context}
 
 ==============================
-LAND ANALYSIS
+LAND ANALYSIS SUMMARY
 ==============================
 
-{land_analysis}
+{land_summary}
 
 ==============================
-CROP RECOMMENDATIONS
+CROP RECOMMENDATION SUMMARY
 ==============================
 
-{crop_recommendations}
+{crop_summary}
 
 ==============================
-BUDGET ANALYSIS
+BUDGET ANALYSIS SUMMARY
 ==============================
 
-{budget_analysis}
+{budget_summary}
 
 ==============================
-CULTIVATION PLAN
+CULTIVATION PLAN SUMMARY
 ==============================
 
-{cultivation_plan}
+{cultivation_summary}
 
 Review the complete proposal.
 
-First provide:
+Generate a professional report in Markdown format.
+
+The report must contain:
+
+# Final Review Report
 
 ## Recommended Land Allocation
 
@@ -79,28 +84,29 @@ For each field include:
 - Area (using the user's land size)
 - Reason for allocation
 
-Then provide a professional review.
+## Overall Assessment
 
-Include:
+## Strengths
 
-1. Overall Assessment
-2. Strengths
-3. Weaknesses
-4. Possible Risks
-5. Suggestions for Improvement
-6. Final Recommendation
-7. Confidence Level (High / Medium / Low)
+## Weaknesses
+
+## Possible Risks
+
+## Suggestions for Improvement
+
+## Final Recommendation
+
+## Confidence Level
+(High / Medium / Low)
 
 Guidelines
 
 - Use the retrieved reference information wherever applicable.
 - If information is unavailable in the retrieved documents, clearly state that.
 - Keep the report practical and suitable for Sri Lankan agriculture.
-
-Return a professional report.
 """
 
-    response = groq_llm.invoke(prompt)
+    response = groq_smart.invoke(prompt)
 
     state["review_feedback"] = response.content
 

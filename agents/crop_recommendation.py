@@ -1,34 +1,30 @@
 from graph.state import AgricultureState
-from tools.llm import groq_llm
+from tools.llm import groq_fast
 from rag.rag_service import retriever
 
 
 def crop_recommendation_agent(state: AgricultureState):
-
-    land_analysis = state["land_analysis"]
 
     # Create search query
     search_query = f"""
     District: {state["district"]}
     Soil Type: {state["soil_type"]}
     Water Source: {state["water_source"]}
+    Land Size: {state["land_size"]} {state["land_unit"]}
     Objective: {state["objective"]}
-
-    Land Analysis:
-    {land_analysis}
     """
 
     # Retrieve relevant documents
-    retrieved_docs = retriever.search(search_query, k=5)
+    retrieved_docs = retriever.search(search_query, k=4)
 
     rag_context = "\n\n".join(
         doc.page_content for doc in retrieved_docs
     )
 
     prompt = f"""
-You are an experienced agricultural consultant specializing in Sri Lankan agriculture.
+You are an expert agricultural crop advisor specializing in Sri Lankan agriculture.
 
-Use the following reference information when making recommendations.
+Use the reference information below when recommending crops.
 
 =========================
 REFERENCE INFORMATION
@@ -37,37 +33,81 @@ REFERENCE INFORMATION
 {rag_context}
 
 =========================
-LAND ANALYSIS
+LAND ANALYSIS SUMMARY
 =========================
 
-{land_analysis}
+{state["land_summary"]}
 
-Recommend the best crops for this land.
+=========================
+USER INFORMATION
+=========================
 
-Requirements
+District: {state["district"]}
+Land Size: {state["land_size"]} {state["land_unit"]}
+Water Source: {state["water_source"]}
+Soil Type: {state["soil_type"]}
+Objective: {state["objective"]}
 
-- Recommend the 3 most suitable crops.
-- Rank them from most suitable to least suitable.
+Generate a professional report in Markdown format.
 
-For each crop provide:
+The report must contain:
 
-1. Crop Name
-2. Suitability Score (/100)
-3. Why it is suitable
-4. Expected growing period
-5. Estimated cultivation cost (if available in the reference information)
-6. Advantages
-7. Possible risks
-8. Profit potential
+# Crop Recommendation Report
 
-Base your recommendations primarily on the provided reference information whenever possible.
-If some information is not available in the retrieved documents, clearly mention that instead of inventing values.
+## 1. Best Crop Recommendations
+Recommend the most suitable crops.
 
-Return the answer as a professional report.
+## 2. Suitability Analysis
+Explain why each crop is suitable.
+
+## 3. Expected Yield
+
+## 4. Estimated Profit Potential
+
+## 5. Advantages
+
+## 6. Risks
+
+## 7. Overall Recommendation
+
+Base your recommendations primarily on the provided reference information.
+
+If sufficient information is unavailable, clearly mention it and use general agricultural knowledge cautiously.
+
+===================================================
+EXECUTIVE SUMMARY
+===================================================
+
+At the end of the report, create a section titled exactly:
+
+## Executive Summary
+
+Requirements:
+- Maximum 6 bullet points.
+- Include:
+  • Best recommended crop
+  • Second-best crop
+  • Suitability score
+  • Profit potential
+  • Main cultivation risk
+  • Overall recommendation
+- Keep the summary under 120 words.
+- This summary will be used by another AI agent.
 """
 
-    response = groq_llm.invoke(prompt)
+    response = groq_fast.invoke(prompt)
 
-    state["crop_recommendations"] = response.content
+    full_report = response.content
+
+    # Store full report
+    state["crop_recommendations"] = full_report
+
+    # Extract executive summary
+    if "## Executive Summary" in full_report:
+        summary = full_report.split("## Executive Summary", 1)[1].strip()
+    else:
+        summary = full_report
+
+    state["crop_summary"] = summary
 
     return state

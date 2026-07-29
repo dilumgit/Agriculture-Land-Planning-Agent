@@ -1,4 +1,4 @@
-# 🌾 Agriculture Land Planning Agent
+# 🌱 Agriculture Land Planning AI System
 
 <p align="center">
 
@@ -7,430 +7,536 @@
 ![LangGraph](https://img.shields.io/badge/LangGraph-Multi--Agent-success)
 ![LangChain](https://img.shields.io/badge/LangChain-RAG-green)
 ![FAISS](https://img.shields.io/badge/FAISS-Vector%20Database-orange)
-![LLM](https://img.shields.io/badge/LLM-Groq%20%7C%20OpenRouter-blueviolet)
+![Groq](https://img.shields.io/badge/Groq-LLM-blueviolet)
 ![License](https://img.shields.io/badge/License-Academic-lightgrey)
 
 </p>
 
 ---
 
-# 🌱 Agriculture Land Planning Agent
+# Agriculture Land Planning AI System
 
-> **An AI-powered Multi-Agent Agricultural Decision Support System using LangGraph, Retrieval-Augmented Generation (RAG), and Large Language Models (LLMs).**
+> **An AI-powered Multi-Agent Agricultural Decision Support System built using LangGraph, Retrieval-Augmented Generation (RAG), FAISS, and Groq Large Language Models.**
 
-The **Agriculture Land Planning Agent** is an intelligent decision-support system developed to assist farmers in generating optimized agricultural land cultivation plans. The application leverages **Agentic AI**, where multiple specialized AI agents collaborate to analyze land conditions, recommend suitable crops, allocate budgets, and generate comprehensive cultivation plans.
+The **Agriculture Land Planning AI System** is an intelligent decision support application that helps farmers generate cultivation plans based on land characteristics, available budget, water source, soil type, and farming objectives.
 
-Unlike traditional AI chatbots that rely on a single prompt, this system follows a **multi-agent architecture** implemented with **LangGraph**, enabling each agent to focus on a dedicated agricultural planning task. Additionally, the system integrates **Retrieval-Augmented Generation (RAG)** to improve response quality by retrieving relevant agricultural knowledge from a curated document repository before generating recommendations.
+Unlike traditional chatbot-based systems, this project follows a **Multi-Agent AI Architecture** implemented with **LangGraph**. Instead of solving the entire problem using a single prompt, the workflow is divided into specialized AI agents. Each agent performs one responsibility and passes its results to the next stage of the workflow.
 
-The application provides a user-friendly **Streamlit** interface where farmers or agricultural planners can enter land details and receive intelligent planning recommendations supported by AI reasoning and domain knowledge.
+To improve recommendation accuracy, the application integrates **Retrieval-Augmented Generation (RAG)**. Before generating responses, each AI agent retrieves relevant agricultural knowledge from a **FAISS Vector Database** built using **Sentence Transformer embeddings**. This enables recommendations to be grounded in agricultural documents rather than relying only on pretrained model knowledge.
 
----
-
-# 📑 Table of Contents
-
-- [Project Overview](#-project-overview)
-- [Project Objectives](#-project-objectives)
-- [Key Features](#-key-features)
-- [System Architecture](#-system-architecture)
-- [Agent Communication](#-agent-communication)
-- [RAG Pipeline](#-rag-pipeline)
-- [Model Choice Comparison](#-model-choice-comparison)
-- [Technology Stack](#-technology-stack)
-- [Project Structure](#-project-structure)
-- [Installation Guide](#-installation-guide)
-- [Environment Variables](#-environment-variables)
-- [Running the Application](#-running-the-application)
-- [Example Usage](#-example-usage)
-- [Screenshots](#-screenshots)
-- [Live Streamlit Demo](#-live-streamlit-demo)
-- [Known Limitations](#-known-limitations)
-- [Future Improvements](#-future-improvements)
-- [Author](#-author)
-- [License](#-license)
+The application uses **Groq-hosted Llama models** for high-speed inference and provides an easy-to-use **Streamlit** interface where users can enter farm information and receive an AI-generated cultivation plan.
 
 ---
 
-# 📖 Project Overview
+# Table of Contents
 
-Agricultural land planning involves multiple factors including land size, geographical location, available budget, irrigation methods, soil characteristics, and cultivation objectives. Farmers often rely on personal experience or fragmented information sources when making cultivation decisions.
-
-This project addresses this challenge by combining **Large Language Models (LLMs)** with **Retrieval-Augmented Generation (RAG)** and a **multi-agent architecture** to automate agricultural planning.
-
-Instead of producing generic responses, the system retrieves relevant agricultural knowledge from its document repository and coordinates multiple AI agents to generate informed recommendations.
-
-The generated output includes:
-
-- Land suitability analysis
-- Crop recommendations
-- Budget allocation suggestions
-- Cultivation planning
-- AI-generated review and recommendations
+- Project Overview
+- Project Objectives
+- Key Features
+- System Architecture
+- Agent Workflow
+- RAG Pipeline
+- Technology Stack
+- Project Structure
+- Installation Guide
+- Environment Variables
+- Running the Application
+- Example Usage
+- Screenshots
+- Demo Video
+- Live Demo
+- GitHub Repository
+- Known Limitations
+- Future Improvements
+- Acknowledgements
+- Author
+- License
 
 ---
 
-# 🎯 Project Objectives
+# Project Overview
 
-The primary objectives of this project are:
+Agricultural planning requires evaluating multiple factors such as:
+
+- District
+- Land Size
+- Soil Type
+- Water Source
+- Available Budget
+- Farming Objective
+
+Making these decisions manually can be difficult because recommendations depend on multiple conditions.
+
+The **Agriculture Land Planning AI System** solves this problem using a collaborative **LangGraph Multi-Agent Workflow**.
+
+Instead of asking one AI model to generate everything, the workflow divides the task into several specialized AI agents.
+
+Each agent focuses on one responsibility:
+
+- Land Analysis
+- Crop Recommendation
+- Budget Analysis
+- Cultivation Planning
+- Final Review
+
+The workflow is coordinated using **LangGraph**, while **RAG** retrieves agricultural knowledge from a FAISS vector database before each agent generates its response.
+
+The final result is a complete cultivation plan that includes land suitability analysis, crop recommendations, budget estimation, cultivation schedule, and a final expert review.
+
+---
+
+# Project Objectives
+
+The objectives of this project are:
 
 - Develop an AI-powered agricultural decision support system.
-- Demonstrate Agentic AI using LangGraph.
-- Implement multiple collaborative AI agents.
+- Implement a Multi-Agent workflow using LangGraph.
 - Improve recommendation quality using Retrieval-Augmented Generation (RAG).
-- Store agricultural knowledge in a FAISS vector database.
-- Generate intelligent cultivation plans based on user requirements.
-- Provide a simple and interactive Streamlit web application.
+- Build a searchable agricultural knowledge base using FAISS.
+- Generate intelligent cultivation plans based on user inputs.
+- Provide an easy-to-use Streamlit web interface.
+- Demonstrate Agentic AI concepts through collaborative AI agents.
+- Design a modular architecture that can be extended with additional AI agents in the future.
 
 ---
 
-# ✨ Key Features
+# Key Features
 
-### 🤖 Multi-Agent AI Workflow
+## Multi-Agent AI Workflow
 
-The planning process is divided into multiple intelligent agents that perform specialized tasks.
-
----
-
-### 🧠 Retrieval-Augmented Generation (RAG)
-
-Relevant agricultural documents are retrieved before the language model generates recommendations.
+The application divides the planning process into multiple specialized AI agents coordinated using LangGraph.
 
 ---
 
-### 🌾 Land Analysis
+## Land Analysis Agent
 
-Analyzes user-provided land information and determines agricultural suitability.
+Analyzes land suitability using:
 
----
-
-### 🌱 Crop Recommendation
-
-Suggests suitable crops based on district, soil type, water source, and cultivation objectives.
-
----
-
-### 💰 Budget Planning
-
-Distributes the available budget among recommended cultivation activities.
+- District
+- Land Size
+- Soil Type
+- Water Source
+- Farming Objective
 
 ---
 
-### 📋 Cultivation Planning
+## Crop Recommendation Agent
 
-Generates a structured agricultural cultivation plan.
+Recommends suitable crops using:
 
----
-
-### ✅ AI Review Agent
-
-Reviews outputs produced by previous agents and improves the final recommendation.
+- Land analysis
+- Agricultural knowledge base
+- User objectives
 
 ---
 
-### 🌐 Streamlit Interface
+## Budget Analysis Agent
 
-Provides an easy-to-use web interface for interacting with the AI planning system.
+Analyzes the available budget and provides:
+
+- Estimated cultivation cost
+- Budget allocation
+- Financial recommendations
 
 ---
 
-# 🏗️ System Architecture
+## Cultivation Planning Agent
+
+Generates a cultivation schedule including:
+
+- Land preparation
+- Planting
+- Irrigation
+- Fertilization
+- Harvesting
+
+---
+
+## Final Review Agent
+
+Reviews all previous outputs and generates the final agricultural recommendation.
+
+---
+
+## Retrieval-Augmented Generation (RAG)
+
+Each AI agent retrieves relevant agricultural documents before generating responses, improving recommendation accuracy and reducing hallucinations.
+
+---
+
+## Streamlit Web Application
+
+A simple web interface allows users to enter agricultural information and receive AI-generated cultivation plans.
+
+# System Architecture
+
+The Agriculture Land Planning AI System follows a **Sequential Multi-Agent Architecture** implemented using **LangGraph**.
+
+Each AI agent performs a specific task and passes its output to the next agent until a complete cultivation plan is generated.
 
 ```mermaid
 flowchart TD
 
-A[👨 User]
+A[User]
 
-A --> B[🖥️ Streamlit Interface]
+A --> B[Streamlit Web Application]
 
-B --> C[🧠 LangGraph Workflow]
+B --> C[LangGraph Workflow]
 
-C --> D[🌍 Land Analysis Agent]
+C --> D[Land Analysis Agent]
 
-D --> E[🌱 Crop Recommendation Agent]
+D --> E[Crop Recommendation Agent]
 
-E --> F[💰 Budget Analysis Agent]
+E --> F[Budget Analysis Agent]
 
-F --> G[📋 Cultivation Planning Agent]
+F --> G[Cultivation Planning Agent]
 
-G --> H[✅ Review Agent]
+G --> H[Final Review Agent]
 
-H --> I[🤖 Planning Assistant]
-
-I --> J[📄 Final Agricultural Recommendation]
+H --> I[Final Cultivation Report]
 ```
 
 ---
 
-## 🏛️ Architecture Explanation
+# Architecture Explanation
 
-The application follows a **multi-agent architecture** where each AI agent is responsible for a specific planning task.
+The workflow begins when the user enters agricultural information through the Streamlit web interface.
 
-Instead of asking a single language model to generate the entire response, the planning workflow is divided into smaller reasoning steps. This improves modularity, maintainability, and response quality.
+The system then executes a sequence of AI agents using LangGraph.
 
-The **LangGraph** framework orchestrates communication between agents and manages the workflow state throughout the planning process.
+Each agent is responsible for a single stage of the planning process.
 
-Each agent receives the output generated by the previous agent, performs its assigned task, and forwards the updated information to the next stage until the final recommendation is produced.
+The workflow consists of:
+
+1. Land Analysis
+2. Crop Recommendation
+3. Budget Analysis
+4. Cultivation Planning
+5. Final Review
+
+Each stage stores its results in the shared LangGraph state, allowing the next agent to use previous outputs when generating recommendations.
+
+This modular design improves maintainability, scalability, and overall workflow organization.
 
 ---
 
-# 🤖 Agent Communication
+# Agent Workflow
 
-The Agriculture Land Planning Agent follows a sequential multi-agent communication workflow coordinated using **LangGraph**. Each agent performs a dedicated task and passes its output to the next agent through a shared state.
+The following diagram illustrates how information flows through the system.
 
 ```mermaid
 sequenceDiagram
 
 participant User
 participant UI as Streamlit UI
-participant Land as Land Analysis Agent
-participant Crop as Crop Recommendation Agent
-participant Budget as Budget Analysis Agent
-participant Plan as Cultivation Planning Agent
-participant Review as Review Agent
-participant Assistant as Planning Assistant
+participant Land
+participant Crop
+participant Budget
+participant Plan
+participant Review
 
-User->>UI: Submit Land Information
+User->>UI: Enter Farm Information
 
-UI->>Land: Land Details
+UI->>Land: User Inputs
 
 Land->>Crop: Land Analysis
 
-Crop->>Budget: Recommended Crops
+Crop->>Budget: Crop Recommendations
 
-Budget->>Plan: Budget Allocation
+Budget->>Plan: Budget Analysis
 
 Plan->>Review: Cultivation Plan
 
-Review->>Assistant: Verified Recommendation
-
-Assistant-->>UI: Final Response
+Review-->>UI: Final Agricultural Report
 ```
-
-## 🔄 Agent Responsibilities
-
-| Agent | Responsibility |
-|--------|----------------|
-| 🌍 Land Analysis Agent | Evaluates land information and agricultural suitability. |
-| 🌱 Crop Recommendation Agent | Identifies crops suitable for the provided conditions. |
-| 💰 Budget Analysis Agent | Allocates the available budget across cultivation activities. |
-| 📋 Cultivation Planning Agent | Generates the cultivation strategy. |
-| ✅ Review Agent | Reviews and validates the generated plan. |
-| 🤖 Planning Assistant | Produces the final AI response for the user. |
 
 ---
 
-# 🧠 Retrieval-Augmented Generation (RAG)
+# Agent Responsibilities
 
-To improve response quality and reduce hallucinations, the application uses **Retrieval-Augmented Generation (RAG)**.
+| Agent | Responsibility |
+|--------|----------------|
+| Land Analysis Agent | Evaluates land suitability using district, soil type, water source, land size, and farming objective. |
+| Crop Recommendation Agent | Recommends suitable crops based on land conditions and retrieved agricultural knowledge. |
+| Budget Analysis Agent | Estimates cultivation costs and evaluates budget feasibility. |
+| Cultivation Planning Agent | Generates a cultivation schedule including land preparation, planting, irrigation, fertilization, and harvesting. |
+| Final Review Agent | Reviews all previous outputs and produces the final recommendation. |
 
-Instead of relying only on an LLM's pretrained knowledge, the system retrieves relevant agricultural information from a curated knowledge base before generating the final response.
+---
 
-## 🔍 RAG Workflow
+# LangGraph Workflow
+
+The LangGraph workflow executes the agents in the following order:
+
+```text
+Land Analysis
+      │
+      ▼
+Crop Recommendation
+      │
+      ▼
+Budget Analysis
+      │
+      ▼
+Cultivation Planning
+      │
+      ▼
+Final Review
+      │
+      ▼
+END
+```
+
+This workflow ensures that every stage builds upon the results generated by previous agents.
+
+---
+
+# Retrieval-Augmented Generation (RAG)
+
+The Agriculture Land Planning AI System integrates **Retrieval-Augmented Generation (RAG)** to improve the quality of AI-generated recommendations.
+
+Instead of relying only on pretrained model knowledge, each AI agent retrieves relevant agricultural documents before generating its response.
+
+The retrieved information provides reliable domain-specific knowledge that improves recommendation accuracy.
+
+---
+
+# RAG Pipeline
 
 ```mermaid
 flowchart LR
 
-A[📄 Agricultural Documents]
+A[User Input]
 
-A --> B[📥 Document Loader]
+A --> B[Sentence Transformer Embedding]
 
-B --> C[✂️ Text Splitter]
+B --> C[Query Vector]
 
-C --> D[🧠 Sentence Embeddings]
+C --> D[FAISS Vector Database]
 
-D --> E[(FAISS Vector Database)]
+D --> E[Relevant Agricultural Documents]
 
-E --> F[🔍 Similarity Search]
+E --> F[Agent Prompt]
 
-F --> G[📚 Relevant Context]
+F --> G[Groq LLM]
 
-G --> H[🤖 Large Language Model]
-
-H --> I[📄 AI Recommendation]
+G --> H[AI Response]
 ```
 
 ---
 
-## 📚 Knowledge Base
+# RAG Processing Steps
 
-The RAG knowledge base contains agricultural reference documents such as:
+### Step 1 – User Input
 
-- Sri Lankan district information
-- Crop suitability guides
-- Cultivation budget guides
-- Agricultural planning guides
-- Farming best practices
+The user enters:
 
-These documents are indexed into a **FAISS Vector Store**, allowing the system to retrieve only the most relevant information for each query.
-
----
-
-## ⚙️ RAG Processing Steps
-
-1. Agricultural documents are loaded.
-2. Documents are divided into smaller text chunks.
-3. Sentence embeddings are generated.
-4. Embeddings are stored inside the FAISS vector database.
-5. The retriever performs semantic similarity search.
-6. Relevant document chunks are provided as context to the LLM.
-7. The LLM generates a grounded recommendation.
+- District
+- Land Size
+- Land Unit
+- Budget
+- Water Source
+- Soil Type
+- Farming Objective
 
 ---
 
-# 🤖 Model Choice Comparison
+### Step 2 – Query Embedding
 
-The project supports multiple Large Language Models.
-
-| Model | Purpose | Advantages | Limitations |
-|--------|----------|------------|-------------|
-| **Groq – Llama 3.1 8B Instant** | Primary reasoning model | Very fast inference, low latency, cost-effective | Internet connection required |
-| **OpenRouter – Nemotron** | Alternative reasoning model | Flexible model selection, fallback support | API response time depends on provider |
+The user input is converted into vector embeddings using a Sentence Transformer model.
 
 ---
 
-## 🏆 Why Groq?
+### Step 3 – Similarity Search
 
-- Fast response generation
-- Low latency
-- Suitable for interactive applications
-- Excellent performance for Agentic AI workflows
+The generated vector is compared against the FAISS vector database to retrieve the most relevant agricultural documents.
 
 ---
 
-## 🌐 Why OpenRouter?
+### Step 4 – Context Retrieval
 
-- Access to multiple LLM providers
-- Flexible deployment options
-- Useful as a fallback model
-- Easy integration with LangChain
+The retrieved documents are combined with the AI prompt before reasoning begins.
 
 ---
 
-# 🛠️ Technology Stack
+### Step 5 – AI Reasoning
+
+The Groq-hosted language model analyzes:
+
+- User Inputs
+- Retrieved Agricultural Knowledge
+- Previous Agent Outputs
+
+---
+
+### Step 6 – Response Generation
+
+Each AI agent generates its response and passes it to the next stage of the workflow.
+
+---
+
+# Knowledge Base
+
+The knowledge base contains agricultural information used by the RAG pipeline.
+
+Examples include:
+
+- Crop suitability
+- Soil characteristics
+- Water management
+- Irrigation practices
+- Fertilizer recommendations
+- Pest and disease management
+- Harvesting techniques
+- Sustainable farming practices
+
+The documents are converted into vector embeddings using Sentence Transformers and stored inside a FAISS Vector Database.
+
+---
+
+# Technology Stack
 
 | Category | Technology |
-|-----------|------------|
-| Programming Language | Python |
-| User Interface | Streamlit |
-| Multi-Agent Framework | LangGraph |
-| LLM Framework | LangChain |
+|----------|------------|
+| Programming Language | Python 3.11+ |
+| Web Framework | Streamlit |
+| Workflow Engine | LangGraph |
+| AI Framework | LangChain |
+| Large Language Model | Groq (Llama Models) |
 | Vector Database | FAISS |
 | Embedding Model | Sentence Transformers |
-| Primary LLM | Groq |
-| Alternative LLM | OpenRouter |
-| Environment Management | python-dotenv |
+| Knowledge Retrieval | Retrieval-Augmented Generation (RAG) |
+| Environment Variables | python-dotenv |
+| Version Control | Git & GitHub |
 
----
-
-# 📂 Project Structure
+# Project Structure
 
 ```text
-Agriculture-Land-Planning-Agent
+AGRI-LAND-PLANNER-AI/
 │
 ├── agents/
-│   ├── land_analysis.py
-│   ├── crop_recommendation.py
 │   ├── budget_analysis.py
+│   ├── crop_recommendation.py
 │   ├── cultivation_plan.py
-│   ├── review.py
-│   └── planning_assistant.py
+│   ├── land_analysis.py
+│   ├── planning_assistant.py
+│   └── review.py
+│
+├── docs/
+│   └── screenshots/
+│       ├── form.png
+│       ├── land_analysis.png
+│       ├── crop_recommendation.png
+│       ├── budget_analysis.png
+│       ├── cultivation_plan.png
+│       ├── final_review.png
+│       ├── farm_summary.png
+│       └── assistant.png
 │
 ├── graph/
+│   ├── state.py
 │   └── workflow.py
 │
 ├── rag/
 │   ├── data/
-│   ├── loader.py
-│   ├── splitter.py
+│   ├── vector_db/
+│   ├── __init__.py
+│   ├── build_vector_db.py
 │   ├── embeddings.py
-│   ├── vector_store.py
+│   ├── loader.py
+│   ├── rag_service.py
 │   ├── retriever.py
-│   └── rag_service.py
+│   ├── splitter.py
+│   └── vector_store.py
 │
 ├── tools/
-│   └── llm.py
+│   ├── llm.py
+│   └── search.py
 │
 ├── ui/
 │
+├── .env
+├── .gitignore
 ├── app.py
+├── streamlit_app.py
 ├── requirements.txt
-├── README.md
-└── .env
+└── README.md
 ```
 
 ---
 
-# 💡 Why LangGraph?
+# Why LangGraph?
 
-LangGraph provides a structured way to build multi-agent AI systems.
+The Agriculture Land Planning AI System uses **LangGraph** to manage a structured multi-agent workflow.
 
-Key benefits include:
+Instead of handling all reasoning in a single prompt, LangGraph coordinates multiple AI agents, where each agent performs a specific task and passes its results to the next stage.
 
-- Stateful workflows
-- Modular agent design
-- Agent-to-agent communication
-- Easy workflow expansion
-- Better maintainability
-- Flexible execution control
+### Advantages of LangGraph
 
----
+- Supports multi-agent workflows
+- Provides shared state management
+- Enables sequential task execution
+- Makes the workflow modular and scalable
+- Simplifies maintenance and debugging
+- Allows easy addition of new AI agents
 
-# 💡 Why Retrieval-Augmented Generation (RAG)?
-
-Traditional LLMs rely only on pretrained knowledge.
-
-RAG improves the system by:
-
-- Retrieving relevant agricultural documents
-- Reducing hallucinations
-- Improving recommendation accuracy
-- Providing domain-specific context
-- Supporting knowledge updates without retraining the LLM
+LangGraph is responsible for coordinating the complete agricultural planning process from land analysis to the final review.
 
 ---
 
-# 🚀 Installation Guide
+# Why Retrieval-Augmented Generation (RAG)?
 
-Follow the steps below to set up and run the project locally.
+Traditional language models generate responses using only their pretrained knowledge.
 
-## 1️⃣ Clone the Repository
+This project integrates **Retrieval-Augmented Generation (RAG)** so that each AI agent can retrieve relevant agricultural documents before generating recommendations.
+
+The retrieved documents provide reliable domain-specific information that improves the quality and accuracy of responses.
+
+### Benefits of RAG
+
+- Improves recommendation accuracy
+- Reduces hallucinations
+- Uses agricultural knowledge instead of only pretrained knowledge
+- Supports easy expansion of the knowledge base
+- Enables semantic document retrieval using FAISS
+
+---
+
+# Installation Guide
+
+Follow these steps to run the project locally.
+
+## 1. Clone the Repository
 
 ```bash
-git clone https://github.com/dilumgit/Agriculture-Land-Planning-Agent.git
-```
+git clone https://github.com/dilumgit/AGRI-LAND-PLANNER-AI.git
 
-Move into the project directory.
-
-```bash
-cd Agriculture-Land-Planning-Agent
+cd AGRI-LAND-PLANNER-AI
 ```
 
 ---
 
-## 2️⃣ Create a Virtual Environment
-
-```bash
-python -m venv venv
-```
-
----
-
-## 3️⃣ Activate the Virtual Environment
+## 2. Create a Virtual Environment
 
 ### Windows
 
 ```bash
+python -m venv venv
+
 venv\Scripts\activate
 ```
 
 ### Linux / macOS
 
 ```bash
+python3 -m venv venv
+
 source venv/bin/activate
 ```
 
 ---
 
-## 4️⃣ Install Required Packages
+## 3. Install Required Packages
 
 ```bash
 pip install -r requirements.txt
@@ -438,67 +544,106 @@ pip install -r requirements.txt
 
 ---
 
-## 5️⃣ Configure Environment Variables
+## 4. Configure Environment Variables
 
-Create a `.env` file in the project root.
+Create a file named **.env** in the project root.
+
+Example:
 
 ```env
-GROQ_API_KEY=YOUR_GROQ_API_KEY
-
-OPENROUTER_API_KEY=YOUR_OPENROUTER_API_KEY
+GROQ_API_KEY=your_groq_api_key
 ```
 
-> **Note:** Replace the placeholder values with your own API keys.
+Replace the value with your own Groq API key.
 
 ---
 
-## 6️⃣ Build the RAG Knowledge Base
+## 5. Build the FAISS Vector Database
 
-If your project requires generating the FAISS vector database, run:
+Before running the application, create the vector database.
 
 ```bash
 python rag/build_vector_db.py
 ```
 
-> This step only needs to be performed when the knowledge base is updated.
+This command loads the agricultural documents, creates vector embeddings, and stores them inside the FAISS vector database.
 
 ---
 
-## 7️⃣ Run the Application
+## 6. Run the Application
 
 ```bash
 streamlit run app.py
 ```
 
-The application will be available at:
-
-```
-http://localhost:8501
-```
+The Streamlit application will open automatically in your default web browser.
 
 ---
 
-# ▶️ Running the Application
+# Environment Variables
 
-After launching the application:
+The project requires the following environment variable.
 
-1. Open the Streamlit interface.
-2. Enter the required agricultural information.
-3. Submit the form.
-4. The AI agents execute sequentially.
-5. Relevant agricultural documents are retrieved from the RAG knowledge base.
-6. The final cultivation recommendation is generated and displayed.
+| Variable | Description |
+|----------|-------------|
+| GROQ_API_KEY | API key used to access Groq-hosted language models |
+
+Example:
+
+```env
+GROQ_API_KEY=gsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+> **Important:** Never upload your `.env` file or API keys to a public GitHub repository.
 
 ---
 
-# 📖 Example Usage
+# Running the Application
 
-## Example Input
+After completing the installation steps, start the application using:
 
-| Parameter | Example |
-|------------|---------|
+```bash
+streamlit run app.py
+```
+
+Once the application opens:
+
+1. Select the **District**.
+2. Enter the **Land Size**.
+3. Select the **Land Unit**.
+4. Enter the available **Budget**.
+5. Select the **Water Source**.
+6. Select the **Soil Type**.
+7. Choose the **Cultivation Objective**.
+8. Click **Generate Plan**.
+
+The LangGraph workflow will automatically execute:
+
+- Land Analysis Agent
+- Crop Recommendation Agent
+- Budget Analysis Agent
+- Cultivation Planning Agent
+- Final Review Agent
+
+The generated report includes:
+
+- Land Analysis
+- Crop Recommendations
+- Budget Analysis
+- Cultivation Plan
+- Final Review
+
+---
+
+# Example Usage
+
+## Sample Input
+
+| Field | Value |
+|--------|-------|
 | District | Kurunegala |
-| Land Size | 2 Acres |
+| Land Size | 2 |
+| Unit | Acres |
 | Budget | Rs. 500,000 |
 | Water Source | Well |
 | Soil Type | Loamy |
@@ -506,301 +651,185 @@ After launching the application:
 
 ---
 
-## Expected Output
+## AI Workflow
 
-The system generates:
+The application automatically performs the following steps:
 
-- 🌍 Land Suitability Analysis
-- 🌱 Recommended Crops
-- 💰 Budget Allocation
-- 📅 Cultivation Plan
-- ✅ AI Review
-- 📄 Final Agricultural Recommendation
-
----
-
-# 📸 Screenshots
-
-The following screenshots should be added after completing the application.
-
-## 🖥️ Home Page
-
-```
-screenshots/home.png
-```
-
-*(Insert screenshot here)*
+1. Analyze the land characteristics.
+2. Retrieve relevant agricultural knowledge using RAG.
+3. Recommend suitable crops.
+4. Analyze the available budget.
+5. Generate a cultivation plan.
+6. Review the generated recommendations.
+7. Display the final cultivation report.
 
 ---
 
-## 📝 User Input Form
+## Sample Output
 
-```
-screenshots/input_form.png
-```
+The generated report includes:
 
-*(Insert screenshot here)*
+- Land Analysis
+- Crop Recommendations
+- Budget Analysis
+- Cultivation Plan
+- Final Review
 
----
+# Screenshots
 
-## 🤖 AI Recommendation
+## User Input Form
 
-```
-screenshots/results.png
-```
+The user enters the required agricultural information, including district, land size, budget, water source, soil type, and cultivation objective.
 
-*(Insert screenshot here)*
-
----
-
-## 📚 RAG Knowledge Base
-
-```
-screenshots/rag.png
-```
-
-*(Insert screenshot here)*
+![User Input Form](docs/screenshots/form.png)
 
 ---
 
-## 📂 GitHub Repository
+## Land Analysis
 
-```
-screenshots/github.png
-```
+The Land Analysis Agent evaluates the suitability of the land based on the provided information and retrieved agricultural knowledge.
 
-*(Insert screenshot here)*
+![Land Analysis](docs/screenshots/land_analysis.png)
 
 ---
 
-# 🎥 Demo Video
+## Crop Recommendations
 
-Record a short demonstration showing:
+The Crop Recommendation Agent recommends the most suitable crops for the selected land conditions.
 
-- Project introduction
-- GitHub repository
-- Running the application
-- User input
-- AI workflow
-- Generated recommendation
-- RAG functionality
-
-## Demo Video Link
-
-> *(Add your YouTube or Google Drive link here)*
+![Crop Recommendation](docs/screenshots/crop_recommendation.png)
 
 ---
 
-# 🌐 Live Streamlit Demo
+## Budget Analysis
 
-Deploy the application using **Streamlit Community Cloud**.
+The Budget Analysis Agent estimates cultivation costs and evaluates whether the available budget is sufficient.
 
-### Live Application
-
-> *(Add your deployed Streamlit URL here)*
-
-Example
-
-```
-https://your-project.streamlit.app
-```
+![Budget Analysis](docs/screenshots/budget_analysis.png)
 
 ---
 
-# 📂 GitHub Repository
+## Cultivation Plan
 
-GitHub Repository:
+The Cultivation Planning Agent generates a complete cultivation schedule, including land preparation, planting, irrigation, fertilization, and harvesting activities.
 
-```
-https://github.com/dilumgit/Agriculture-Land-Planning-Agent
-```
+![Cultivation Plan](docs/screenshots/cultivation_plan.png)
 
 ---
 
-# ✅ Assignment Requirements Checklist
+## Final Review
 
-| Requirement | Status |
-|------------|--------|
-| Project Description | ✅ Included |
-| Architecture Diagram | ✅ Included |
-| Agent Communication Diagram | ✅ Included |
-| RAG Pipeline Explanation | ✅ Included |
-| Model Comparison Table | ✅ Included |
-| Setup Instructions | ✅ Included |
-| Streamlit Demo Link | ✅ Placeholder Added |
-| Screenshots | ✅ Placeholder Added |
-| Demo Video | ✅ Placeholder Added |
-| Known Limitations | ⏳ Included in Part 4 |
-| Future Improvements | ⏳ Included in Part 4 |
-| License | ⏳ Included in Part 4 |
-| Author | ⏳ Included in Part 4 |
+The Final Review Agent reviews the recommendations generated by previous agents and produces the final cultivation report.
+
+![Final Review](docs/screenshots/final_review.png)
 
 ---
 
-# 💡 Tips for Evaluation
+## Farm Summary
 
-To achieve the best presentation during evaluation:
+The final report provides a summarized view of the complete cultivation plan.
 
-- Ensure the RAG knowledge base is built before running the application.
-- Demonstrate each AI agent in sequence.
-- Show that retrieved document context influences the generated recommendation.
-- Include screenshots in the README after testing.
-- Provide a working Streamlit deployment link before submission.
-- Verify that all GitHub links are publicly accessible.
+![Farm Summary](docs/screenshots/farm_summary.png)
 
 ---
 
-# ⚠️ Known Limitations
+# Demo Video
 
-Although the Agriculture Land Planning Agent provides intelligent recommendations, the current implementation has several limitations:
+A demonstration of the Agriculture Land Planning AI System is available at the following link:
 
-- The quality of recommendations depends on the documents available in the RAG knowledge base.
-- Real-time weather conditions are not considered during decision-making.
-- Live market prices and crop demand are not integrated.
-- The system currently focuses on agricultural planning and does not estimate long-term profitability.
-- Internet connectivity is required to access external LLM APIs.
-- AI-generated recommendations should be validated by agricultural experts before practical implementation.
+**Demo Video:**
+
+https://drive.google.com/file/d/1FqF0anl5RQA4GbKSipqRd52Skl0T9c9u/view?usp=sharing
 
 ---
 
-# 🚀 Future Improvements
+# Live Streamlit Demo
 
-The following enhancements can further improve the system:
+Access the deployed application here:
 
-## 🌦️ Weather Integration
+https://YOUR_STREAMLIT_APP_URL.streamlit.app
 
-Integrate weather APIs to provide weather-aware cultivation recommendations.
-
----
-
-## 💹 Market Price Prediction
-
-Recommend crops using current and predicted market prices.
+> Replace the above URL with your actual Streamlit Community Cloud URL after deployment.
 
 ---
 
-## 📱 Mobile Application
+# GitHub Repository
 
-Develop Android and iOS applications for easier farmer access.
+Source code:
 
----
+https://github.com/dilumgit/AGRI-LAND-PLANNER-AI
 
-## 🌍 Multi-Language Support
-
-Support:
-
-- English
-- Sinhala
-- Tamil
+> Replace the above URL with your actual GitHub repository link.
 
 ---
 
-## 📄 PDF Report Generation
+# Known Limitations
 
-Allow users to download the generated cultivation plan as a PDF report.
+The current version of the Agriculture Land Planning AI System has the following limitations:
 
----
-
-## 👨‍🌾 Farmer Profile Management
-
-Store previous cultivation plans and user preferences.
-
----
-
-## 📈 AI Cost Optimization
-
-Use AI to recommend budget optimization strategies for maximum profitability.
+- Recommendations depend on the quality of the agricultural knowledge base.
+- The application does not currently use real-time weather information.
+- Crop recommendations are limited to the available agricultural documents.
+- Internet connectivity is required to access the Groq API.
+- The system is intended as a decision-support tool and should not replace advice from agricultural experts.
 
 ---
 
-## 🛰️ GIS & Satellite Data
+# Future Improvements
 
-Integrate satellite imagery and GIS data to improve land suitability analysis.
+Planned enhancements include:
 
----
-
-# 📚 References
-
-This project was developed using the following technologies and resources:
-
-- LangGraph Documentation
-- LangChain Documentation
-- Streamlit Documentation
-- FAISS Documentation
-- Sentence Transformers Documentation
-- Groq API Documentation
-- OpenRouter API Documentation
-
-The agricultural knowledge base consists of curated farming guides and cultivation documents used to support Retrieval-Augmented Generation (RAG).
+- Integration with real-time weather APIs.
+- Market price analysis for crop profitability.
+- Multilingual support (English, Sinhala, and Tamil).
+- Downloadable PDF cultivation reports.
+- Image-based soil and crop analysis.
+- Seasonal crop planning recommendations.
+- Expanded agricultural knowledge base.
+- Mobile-friendly user interface.
 
 ---
 
-# 🙏 Acknowledgements
+# Acknowledgements
 
-Special thanks to:
+This project was developed using the following open-source technologies:
 
-- Horizon Campus
-- Faculty of Computing
-- Module Lecturer
-- LangGraph Community
-- LangChain Community
-- Streamlit Team
-- Open Source Contributors
+- Python
+- Streamlit
+- LangGraph
+- LangChain
+- Groq
+- FAISS
+- Sentence Transformers
 
-for providing the tools, frameworks, and learning resources used throughout this project.
-
----
-
-# 👨‍💻 Author
-
-## Project
-
-**Agriculture Land Planning Agent**
+Special thanks to the open-source community for providing the tools and frameworks that made this project possible.
 
 ---
 
-### Developer
+# Author
 
-**<YOUR NAME>**
+**Name:** Dilum Karunarathna
 
----
+**Module:** IT41043 – Intelligent Systems
 
-### Institution
+**Institution:** Horizon Campus
 
-Horizon Campus
+**GitHub:** https://github.com/dilumgit
 
----
-
-### Module
-
-**IT41043 – Intelligent Systems**
+**Email:** dilkaru999@gmail.com
 
 ---
 
-### Academic Year
+# License
 
-2026
+This project was developed for academic purposes as part of the **IT41043 – Intelligent Systems (Agentic AI)** module.
 
----
-
-# 📜 License
-
-This project was developed solely for academic purposes as part of the **IT41043 – Intelligent Systems** module.
-
-The source code may be used for learning and educational purposes only.
+You are welcome to use, modify, and extend this project for educational and research purposes with appropriate attribution.
 
 ---
 
-# ⭐ Support
+<p align="center">
 
-If you found this project useful, consider giving it a ⭐ on GitHub.
+## If you found this project useful, consider giving it a star on GitHub!
 
----
-
-<div align="center">
-
-## 🌾 Thank You for Visiting This Repository!
-
-**Built with ❤️ using Python, Streamlit, LangGraph, LangChain, FAISS, and Large Language Models**
-
-</div>
+</p>

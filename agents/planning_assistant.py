@@ -1,4 +1,4 @@
-from tools.llm import groq_llm
+from tools.llm import groq_smart
 
 
 def planning_assistant(
@@ -10,7 +10,7 @@ def planning_assistant(
     prompt = f"""
 You are an expert Agricultural AI Planning Assistant.
 
-The following cultivation plan has already been generated.
+Use the following executive summaries to answer the user's question.
 
 ===================================================
 FARMER DETAILS
@@ -24,28 +24,28 @@ Soil Type : {farmer_details["soil_type"]}
 Objective : {farmer_details["objective"]}
 
 ===================================================
-LAND ANALYSIS
+LAND SUMMARY
 ===================================================
 
-{result["land_analysis"]}
+{result["land_summary"]}
 
 ===================================================
-CROP RECOMMENDATIONS
+CROP SUMMARY
 ===================================================
 
-{result["crop_recommendations"]}
+{result["crop_summary"]}
 
 ===================================================
-BUDGET ANALYSIS
+BUDGET SUMMARY
 ===================================================
 
-{result["budget_analysis"]}
+{result["budget_summary"]}
 
 ===================================================
-CULTIVATION PLAN
+CULTIVATION SUMMARY
 ===================================================
 
-{result["cultivation_plan"]}
+{result["cultivation_summary"]}
 
 ===================================================
 FINAL REVIEW
@@ -59,19 +59,14 @@ USER QUESTION
 
 {user_question}
 
-===================================================
-
 Instructions
 
-- Answer ONLY based on the cultivation plan above.
-- Explain recommendations clearly.
-- If the user asks for another crop, compare it with the current recommendation.
-- If the user changes the budget, land size or objective, provide an updated recommendation.
-- Be practical and professional.
+- Answer ONLY using the summaries above.
+- If the user changes the budget, land size, or objective, update the recommendation accordingly.
+- Keep the response concise.
 - Use Markdown.
-- Keep the answer concise and useful.
 """
 
-    response = groq_llm.invoke(prompt)
+    response = groq_smart.invoke(prompt)
 
     return response.content

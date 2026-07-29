@@ -1,13 +1,14 @@
 from graph.state import AgricultureState
-from tools.llm import groq_llm
+from tools.llm import groq_smart
 from rag.rag_service import retriever
 
 
 def cultivation_plan_agent(state: AgricultureState):
 
-    land_analysis = state["land_analysis"]
-    crop_recommendations = state["crop_recommendations"]
-    budget_analysis = state["budget_analysis"]
+    # Use summaries instead of full reports
+    land_summary = state["land_summary"]
+    crop_summary = state["crop_summary"]
+    budget_summary = state["budget_summary"]
 
     # Create search query
     search_query = f"""
@@ -18,8 +19,8 @@ def cultivation_plan_agent(state: AgricultureState):
     Budget: Rs. {state["budget"]}
     Objective: {state["objective"]}
 
-    Recommended Crops:
-    {crop_recommendations}
+    Crop Summary:
+    {crop_summary}
     """
 
     # Retrieve relevant documents
@@ -41,50 +42,91 @@ REFERENCE INFORMATION
 {rag_context}
 
 ==============================
-LAND ANALYSIS
+LAND ANALYSIS SUMMARY
 ==============================
 
-{land_analysis}
+{land_summary}
 
 ==============================
-CROP RECOMMENDATIONS
+CROP RECOMMENDATION SUMMARY
 ==============================
 
-{crop_recommendations}
+{crop_summary}
 
 ==============================
-BUDGET ANALYSIS
+BUDGET ANALYSIS SUMMARY
 ==============================
 
-{budget_analysis}
+{budget_summary}
 
-Prepare a practical cultivation plan.
+Generate a professional report in Markdown format.
 
-Include the following sections.
+The report must contain:
 
-1. Recommended Primary Crop
-2. Recommended Secondary Crop (if suitable)
-3. Land Preparation
-4. Planting Schedule
-5. Irrigation Plan
-6. Fertilizer Schedule
-7. Pest and Disease Management
-8. Harvest Schedule
-9. Estimated Timeline
-10. Expected Benefits
-11. Important Recommendations
+# Cultivation Plan
+
+## 1. Recommended Primary Crop
+
+## 2. Recommended Secondary Crop (if suitable)
+
+## 3. Land Preparation
+
+## 4. Planting Schedule
+
+## 5. Irrigation Plan
+
+## 6. Fertilizer Schedule
+
+## 7. Pest and Disease Management
+
+## 8. Harvest Schedule
+
+## 9. Estimated Timeline
+
+## 10. Expected Benefits
+
+## 11. Important Recommendations
 
 Guidelines
 
 - Use the retrieved reference information wherever applicable.
 - Keep the plan practical and suitable for Sri Lankan farming conditions.
-- If some information is unavailable in the reference documents, clearly mention that instead of inventing details.
+- If information is unavailable, clearly state that instead of inventing details.
 
-Write the report professionally using headings and bullet points.
+===================================================
+EXECUTIVE SUMMARY
+===================================================
+
+At the end of the report, create a section titled exactly:
+
+## Executive Summary
+
+Requirements:
+- Maximum 6 bullet points.
+- Include:
+  • Primary recommended crop
+  • Secondary crop (if applicable)
+  • Planting period
+  • Irrigation recommendation
+  • Estimated harvest period
+  • Overall cultivation recommendation
+- Keep the summary under 120 words.
+- This summary will be used by another AI agent.
 """
 
-    response = groq_llm.invoke(prompt)
+    response = groq_smart.invoke(prompt)
 
-    state["cultivation_plan"] = response.content
+    full_report = response.content
+
+    # Store full report
+    state["cultivation_plan"] = full_report
+
+    # Extract executive summary
+    if "## Executive Summary" in full_report:
+        summary = full_report.split("## Executive Summary", 1)[1].strip()
+    else:
+        summary = full_report
+
+    state["cultivation_summary"] = summary
 
     return state

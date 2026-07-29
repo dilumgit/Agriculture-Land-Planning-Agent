@@ -14,9 +14,15 @@ class AgricultureState(TypedDict):
     soil_type: str
     objective: str
 
-    # Structured outputs
-    land_analysis: dict
-    crop_recommendations: dict
-    budget_analysis: dict
-    cultivation_plan: dict
-    review_feedback: dict
+    # Full reports
+    land_analysis: str
+    crop_recommendations: str
+    budget_analysis: str
+    cultivation_plan: str
+    review_feedback: str
+
+    # Executive summaries
+    land_summary: str
+    crop_summary: str
+    budget_summary: str
+    cultivation_summary: str
