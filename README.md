@@ -746,9 +746,7 @@ https://drive.google.com/file/d/1FqF0anl5RQA4GbKSipqRd52Skl0T9c9u/view?usp=shari
 
 Access the deployed application here:
 
-https://YOUR_STREAMLIT_APP_URL.streamlit.app
-
-> Replace the above URL with your actual Streamlit Community Cloud URL after deployment.
+https://agriculture-land-planning-agent-zopxgzcrfbyzqew99ys5ck.streamlit.app/
 
 ---
 
