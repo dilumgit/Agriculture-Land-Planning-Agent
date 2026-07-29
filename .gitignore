@@ -12,9 +12,6 @@ __pycache__/
 # ChromaDB
 .chromadb/
 
-# FAISS vector database
-rag/vector_db/
-
 # IDE
 .vscode/
 
